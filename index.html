@@ -143,16 +143,13 @@ document.getElementById("keyForm").addEventListener("submit", function(e){
   const datetimeVal = document.getElementById("datetime").value;
 
   // SEND TO GOOGLE SHEET (background)
-  const data = new URLSearchParams();
-  data.append("borrowerName", borrowerName);
-  data.append("department", departmentVal);
-  data.append("keyNumber", keyNumberVal);
-  data.append("description", descriptionVal);
-  data.append("qty", qtyVal);
-  data.append("security", securityVal);
-  data.append("datetime", datetimeVal);
+  const formData = new FormData(document.getElementById("keyForm"));
 
-  fetch(WEBAPP_URL,{method:"POST",body:data});
+fetch(WEBAPP_URL,{
+  method: "POST",
+  body: formData
+});
+
 
   // WHATSAPP MESSAGE (clean)
   const msg =
@@ -171,7 +168,9 @@ Date & Time: ${datetimeVal}`;
     "_blank"
   );
 
-  document.getElementById("keyForm").reset();
+  document.getElementById("datetime").value =
+  new Date().toLocaleDateString("en-GB") + " " +
+  new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
 
   setTimeout(()=>{
     isSending=false;
